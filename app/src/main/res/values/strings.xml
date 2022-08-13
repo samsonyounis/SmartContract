@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">SmartContract</string>
+    <string name="title_activity_sign_in_screen">SignInScreen</string>
+    <string name="title_activity_forgot_password">ForgotPasswordActivity</string>
+    <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="title_activity_confirm_new_password">ConfirmNewPasswordActivity</string>
+    <string name="title_activity_login_success">LoginSuccessActivity</string>
+    <string name="title_activity_successful_sign_up">SuccessfulSignUp</string>
+    <string name="title_activity_select_account">SelectAccountActivity</string>
+    <string name="title_activity_error_code">ErrorCodeActivity</string>
+    <string name="OTP_Verify">Verify</string>
+    <string name="Otp_Code">OTP Code</string>
+    <string name="continue_Buttons">Continue</string>
+    <string name="next_Buttons">Next</string>
+    <dimen name="title_text_size">28sp</dimen>
+    <string name="title_activity_home_page">HomePageActivity</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="title_activity_products">ProductsActivity</string>
+    <string name="title_activity_upload_product">UploadProductActivity</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="title_activity_product_detail">ProductDetail</string>
+    <string name="title_activity_seller_home_srcreen">SellerHomeSrcreen</string>
+    <string name="title_activity_successful_contract_screen">SuccessfulContractScreen</string>
+    <string name="title_activity_cart_list_screen">CartListScreen</string>
+    <string name="title_activity_home_seller">HomeSeller</string>
+</resources>
