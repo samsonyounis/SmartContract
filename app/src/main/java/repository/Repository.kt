@@ -41,4 +41,8 @@ class Repository {
     fun getCartList(userToken:String):Call<GetCartResponse>{
         return RetrofitObjInstance.ApiConnect.getCartList(userToken)
     }
+    // function to return list of all recent posted products
+    fun getRecentPostedItems():Call<List<ProductList>>{
+        return RetrofitObjInstance.ApiConnect.getRecentPostedItems()
+    }
 }

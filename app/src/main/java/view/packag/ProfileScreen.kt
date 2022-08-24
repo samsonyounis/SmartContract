@@ -12,6 +12,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import view.packag.ReuableFunctions.arrowBackTopRow
+import view.packag.ReuableFunctions.bottomNavigation
 
 @Composable
 fun profileScreen(navController: NavController) {
@@ -21,36 +22,8 @@ fun profileScreen(navController: NavController) {
             arrowBackTopRow(text = "Profile", navController = navController)
         },
         bottomBar = {
-            BottomAppBar(
-                backgroundColor =
-                colorResource(id = R.color.bottom_nav_color),
-                content = {
-                    Row(horizontalArrangement = Arrangement.SpaceEvenly,
-                        modifier = Modifier.fillMaxWidth()) {
-                        IconButton(onClick = { /* doSomething() */ }) {
-                            Icon(Icons.Filled.Home, contentDescription = "go to home")
-                        }
-
-                        IconButton(onClick = { /* doSomething() */ }) {
-                            Icon(
-                                Icons.Filled.Favorite,
-                                contentDescription = "go to favorites"
-                            )
-                        }
-                        IconButton(onClick = { /* doSomething() */ }) {
-                            Icon(
-                                Icons.Filled.Message,
-                                contentDescription = "check messages"
-                            )
-                        }
-                        IconButton(onClick = { /* doSomething() */ }) {
-                            Icon(
-                                Icons.Filled.Person,
-                                contentDescription = "profile"
-                            )
-                        }
-                    }
-                })
+            // implementing the bttom navigation here
+            bottomNavigation(navController = navController, "profileScreen")
 
         }
     ) {

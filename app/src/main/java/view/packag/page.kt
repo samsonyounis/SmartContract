@@ -43,8 +43,7 @@ data class Page(val title:String, val subtitle:String, @DrawableRes val image:In
     @Composable
     fun onboardingUi(navController: NavController){
         val pagerState = rememberPagerState(pageCount = 3)
-        Column {
-
+        Column(modifier = Modifier.padding(16.dp)) {
             HorizontalPager(state = pagerState, modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f)){
@@ -58,7 +57,6 @@ data class Page(val title:String, val subtitle:String, @DrawableRes val image:In
 
             AnimatedVisibility(visible = pagerState.currentPage==2) {
                 commonButton(onClick = {
-
                     navController.popBackStack()
                     navController.navigate("select_Account")
                 }, text = "continue", navController =navController )

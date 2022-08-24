@@ -8,18 +8,30 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import view.packag.ReuableFunctions.commonButton
 
 @Composable
-fun contractSignSuccess(navController: NavController) {
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp),
+fun contractSignSuccess(navController: NavController,noItems:Int, totalPrice:Int) {
+
+    val obj = LocalContext.current
+    // instance of session Manager
+    val sessionManager = SessionManager(obj)
+    // variable to hold the user token
+    var userToken:String by
+    remember{ mutableStateOf(sessionManager.fetchAuthToken().toString()) }
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "Transaction Status")
@@ -34,16 +46,10 @@ fun contractSignSuccess(navController: NavController) {
             color = colorResource(id = R.color.brand_Color),
             modifier = Modifier.clickable { /*TODO*/ })
 
-        Button(onClick = {
-                         // navigating to the pay screen
-                         navController.navigate("payScreen")
-        },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = colorResource(id = R.color.brand_Color),
-                contentColor = Color.White),
-            shape = RoundedCornerShape(20.dp),
-            modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Continue")
-        }
+        commonButton(onClick = {
+            // navigating to the pay screen
+            navController.navigate("payScreen/$noItems/$totalPrice")
+        }, text = "Continue", navController =navController )
+
     }
 }

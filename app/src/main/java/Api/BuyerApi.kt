@@ -6,13 +6,7 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface BuyerApi {
-/*
-    @Field("contact") contact:String,
-    @Field("email") email: String,
-    @Field("firstName") firstName:String,
-    @Field("lastName") lastName:String,
-    @Field("password") password:String,
- */
+
     @POST("codejava/user/singup")
     fun addUserAccount(@Body user:User):Call<SignUpResponse>
 
@@ -38,4 +32,7 @@ interface BuyerApi {
 
      @GET("codejava/cart/list")
      fun getCartList(@Query("token") userToken: String):Call<GetCartResponse>
+
+     @GET("codejava/product/")
+     fun getRecentPostedItems():Call<List<ProductList>>
 }

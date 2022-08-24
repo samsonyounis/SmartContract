@@ -70,9 +70,8 @@ fun confirmPasswordScreen(navController: NavController) {
 
         // reusing the button function
         commonButton(onClick = {
-            // call the request password function
-            // then navigate to confirm password screen to enter the password send to your email
-            navController.navigate("confirmPasswordScreen")
+            // then navigate to successful login screen
+            navController.navigate("successfulLoginScreen")
         }, text = "continue", navController = navController)
         Spacer(modifier = Modifier.height(100.dp))
         Row() {

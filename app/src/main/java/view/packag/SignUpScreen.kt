@@ -21,6 +21,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.Lifecycle
@@ -29,7 +30,9 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import model.User
 import view.packag.ReuableFunctions.arrowBackTopRow
+import view.packag.ReuableFunctions.circularProgress
 import view.packag.ReuableFunctions.commonButton
+import view.packag.ReuableFunctions.commonOutlinedTextField
 
 @Composable
 fun signUpScreen(navController: NavController, viewModel:SignUpScreenViewModel) {
@@ -90,14 +93,8 @@ fun signUpScreen(navController: NavController, viewModel:SignUpScreenViewModel) 
                             fontWeight = FontWeight.Bold)
                 },
                 text = {
-                    if (showProgress == true){
-                        CircularProgressIndicator(
-                            color = colorResource(id = R.color.brand_Color),
-                            strokeWidth = ProgressIndicatorDefaults.StrokeWidth)
-                    }
-                    else{
-                        showProgress==false
-                    }
+                    // showing the circular progress indicator
+                    circularProgress(showProgress = showProgress)
                 },
                 buttons = { }
             )
@@ -105,141 +102,63 @@ fun signUpScreen(navController: NavController, viewModel:SignUpScreenViewModel) 
         LazyColumn(verticalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.padding(10.dp)) {
             item {
-                OutlinedTextField(value = firstName,
-                    onValueChange = { firstName = it },
-                    isError = firstNameIsError,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next
-                    ),
-                    label = { Text("First Name") },
-                    placeholder = { Text(text = "Input Your First Name") },
-                    keyboardActions = KeyboardActions(
-                        onDone = { }
-                    ),
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Person,
-                            contentDescription = "Your First Name"
-                        )
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp)
+                // text field for first name.
+                commonOutlinedTextField(
+                    valueText = firstName, onValueChange = {firstName = it}, isError = firstNameIsError,
+                    labelText = "First name", placeholderText = "Enter your first name",
+                    trailingIcon = Icons.Filled.Person, iconDescription = "your first name" ,
+                    keyboardType= KeyboardType.Text, imeAction = ImeAction.Next,
+                    visualTransFormation = VisualTransformation.None
                 )
             }
             item {
-                OutlinedTextField(value = lastName,
-                    onValueChange = { lastName = it },
-                    label = { Text("Last Name") },
-                    isError = lastNameIsError,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Text,
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { }
-                    ),
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Person,
-                            contentDescription = "Enter Your Last Name"
-                        )
-                    },
-                    placeholder = { Text(text = "Enter your Last Name") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp)
+                // text field for last name.
+                commonOutlinedTextField(
+                    valueText = lastName, onValueChange = {lastName = it}, isError = lastNameIsError,
+                    labelText = "Last name", placeholderText = "Enter your last name",
+                    trailingIcon = Icons.Filled.Person, iconDescription = "your last name" ,
+                    keyboardType= KeyboardType.Text, imeAction = ImeAction.Next,
+                    visualTransFormation = VisualTransformation.None
                 )
             }
             item {
-                OutlinedTextField(value = contact,
-                    onValueChange = { contact = it },
-                    label = { Text("Phone Number") },
-                    isError = contactIsError,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Number,
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { }
-                    ),
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Phone,
-                            contentDescription = "Your Phone Number"
-                        )
-                    },
-                    placeholder = { Text(text = "Enter Your Phone Number") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp)
+                // text field for contact.
+                commonOutlinedTextField(
+                    valueText = contact, onValueChange = {contact = it}, isError = contactIsError,
+                    labelText = "phone number", placeholderText = "Enter your phone number",
+                    trailingIcon = Icons.Filled.Phone, iconDescription = "phone number" ,
+                    keyboardType= KeyboardType.Number, imeAction = ImeAction.Next,
+                    visualTransFormation = VisualTransformation.None
                 )
             }
             item {
-                OutlinedTextField(value = email,
-                    onValueChange = { email = it },
-                    label = { Text("Email Address") },
-                    isError = emailIsError,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { }
-                    ),
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Email,
-                            contentDescription = "Your Email Address"
-                        )
-                    },
-                    placeholder = { Text(text = "Enter Your Email Address") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp)
+                // text field for email address.
+                commonOutlinedTextField(
+                    valueText = email, onValueChange = {email = it}, isError = emailIsError,
+                    labelText = "email address", placeholderText = "Enter your email address",
+                    trailingIcon = Icons.Filled.Email, iconDescription = "your email" ,
+                    keyboardType= KeyboardType.Email, imeAction = ImeAction.Next,
+                    visualTransFormation = VisualTransformation.None
                 )
             }
             item {
-                OutlinedTextField(value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Password") },
-                    isError = passwordIsError,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Next
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { }
-                    ),
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Lock,
-                            contentDescription = "Your Your Password"
-                        )
-                    },
-                    placeholder = { Text(text = "Enter Your your Password") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp)
+                // text field for password.
+                commonOutlinedTextField(
+                    valueText = password, onValueChange = {password = it}, isError = passwordIsError,
+                    labelText = "password", placeholderText = "Enter your password",
+                    trailingIcon = Icons.Filled.Lock, iconDescription = "your password" ,
+                    keyboardType= KeyboardType.Password, imeAction = ImeAction.Next,
+                    visualTransFormation = VisualTransformation.None
                 )
             }
             item {
-                OutlinedTextField(value = confirmPassword,
-                    onValueChange = { confirmPassword = it },
-                    label = { Text("Confirm Password") },
-                    isError = confirmPasswordIsError,
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password,
-                        imeAction = ImeAction.Done
-                    ),
-                    keyboardActions = KeyboardActions(
-                        onDone = { }
-                    ),
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Filled.Lock,
-                            contentDescription = "Confirm Password"
-                        )
-                    },
-                    placeholder = { Text(text = "Confirm Password") },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(20.dp)
+                // text field for confirming password
+                commonOutlinedTextField(
+                    valueText = confirmPassword, onValueChange = {confirmPassword = it}, isError = confirmPasswordIsError,
+                    labelText = "confirm password", placeholderText = "confirm your password",
+                    trailingIcon = Icons.Filled.Lock, iconDescription = "confirm password" ,
+                    keyboardType= KeyboardType.Password, imeAction = ImeAction.Done,
+                    visualTransFormation = VisualTransformation.None
                 )
             }
             item {

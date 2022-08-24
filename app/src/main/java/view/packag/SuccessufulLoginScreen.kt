@@ -17,6 +17,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import view.packag.ReuableFunctions.arrowBackTopRow
+import view.packag.ReuableFunctions.commonButton
 
 @Composable
 fun loginSuccessScreen(navController: NavController) {
@@ -24,20 +26,13 @@ fun loginSuccessScreen(navController: NavController) {
     var obj = LocalContext.current
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(16.dp).fillMaxSize()
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize()
     ) {
-        Row(modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly) {
-            IconButton(onClick = {
-                // navigating the back stack
-                navController.navigateUp()
-            }) {
-                Icon(imageVector = Icons.Filled.ArrowBack,
-                    contentDescription ="navigate back" )
-            }
-            Text(text = "Login Success", fontSize = 18.sp,
-                color = Color.DarkGray)
-        }
+        // top backward arrow
+        arrowBackTopRow(text = "Login Success", navController = navController)
+
         Spacer(modifier = Modifier.height(40.dp))
         Image(painter = painterResource(id = R.drawable.brand4),
             contentDescription = null)
@@ -48,18 +43,10 @@ fun loginSuccessScreen(navController: NavController) {
 
         Text(text = "Now you are ready to go shopping")
         Spacer(modifier = Modifier.height(100.dp))
-
-        Button(modifier = Modifier.fillMaxWidth(),
-            onClick = {
-                // navigating to buyer home screen
-                navController.navigate("buyerHomeScreen")
-            }, shape = RoundedCornerShape(20.dp),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color(255, 127, 80),
-                contentColor = Color.White
-            )
-        ) {
-            Text(text = "Back to home")
-        }
+        // button
+        commonButton(onClick = {
+            // navigating to buyer home screen
+            navController.navigate("buyerHomeScreen/userToken")
+        }, text = "Back to home", navController = navController )
     }
 }

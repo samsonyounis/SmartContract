@@ -17,11 +17,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import view.packag.R
+import view.packag.ReuableFunctions.commonButton
 import java.security.interfaces.RSAMultiPrimePrivateCrtKey
 
 @Composable
 fun orderSuccessScreen(navController: NavController) {
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp),
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp),
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally) {
         Text(text = "Transaction Status")
@@ -32,19 +35,12 @@ fun orderSuccessScreen(navController: NavController) {
             style = MaterialTheme.typography.h1)
         // on clicking this text, then start the download service in the background
         // while at the same time proceed to the next screen
-        Text(text = "DYour package will be send to your address\n thank you for order",
+        Text(text = "Your package will be send to your address\n thank you for order",
             color = colorResource(id = view.packag.R.color.text_color))
 
-        Button(onClick = {
-            // navigating to the pay screen
+        commonButton(onClick = {
+            // navigating to the select account screen
             navController.navigate("select_Account")
-        },
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = colorResource(id = R.color.brand_Color),
-                contentColor = Color.White),
-            shape = RoundedCornerShape(20.dp),
-            modifier = Modifier.fillMaxWidth()) {
-            Text(text = "Back to home")
-        }
+        }, text ="Back to home" , navController = navController)
     }
 }

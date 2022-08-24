@@ -1,8 +1,7 @@
 package view.packag
 
 import ViewModel.BuyerHomeScreenViewModel
-import ViewModel.BuyerHomeScreenViewModelFactory
-import android.content.Intent
+import ViewModel.SellerHomeScreenViewModel
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
@@ -27,26 +26,22 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import model.ProductList
-import repository.Repository
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import view.packag.ReuableFunctions.*
+import view.packag.ReuableFunctions.notificationBadge
+import view.packag.ReuableFunctions.searchTextField
+import view.packag.ReuableFunctions.shoppingCartButton
+import view.packag.ReuableFunctions.userNameCard
 import java.net.URLEncoder
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun productScreen(navController: NavController, viewModel:BuyerHomeScreenViewModel) {
+fun productsByCategoryScreen(navController: NavController, viewModel: SellerHomeScreenViewModel) {
     //Function Local Variables
     val obj = LocalContext.current
-    // instance of session Manager
-    val sessionManager = SessionManager(obj)
+    val sessionManager = SessionManager(obj)  // instance of session Manager
     // variable to hold the user token
     var userToken:String by
     remember{ mutableStateOf(sessionManager.fetchAuthToken().toString()) }
@@ -95,7 +90,7 @@ fun productScreen(navController: NavController, viewModel:BuyerHomeScreenViewMod
                     shoppingCartButton(onClick = {/*TODO*/})
 
                     // implementing the notification badge counter
-                    notificationBadge(navController = navController, noNotifications = "8")
+                    notificationBadge(navController = navController, noNotifications = "6")
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -104,8 +99,41 @@ fun productScreen(navController: NavController, viewModel:BuyerHomeScreenViewMod
             }
         },
         bottomBar = {
-            // implementing the bottom navigation here
-            bottomNavigation(navController = navController, "productScreen")
+            BottomAppBar(
+                backgroundColor =
+                colorResource(id = R.color.bottom_nav_color),
+                content = {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        IconButton(onClick = { /* doSomething() */ }) {
+                            Icon(Icons.Filled.Home, contentDescription = "go to home")
+                        }
+                        IconButton(onClick = { /* doSomething() */ }) {
+                            Icon(
+                                Icons.Filled.Favorite,
+                                contentDescription = "go to favorites"
+                            )
+                        }
+                        IconButton(onClick = { /* doSomething() */ }) {
+                            Icon(
+                                Icons.Filled.Message,
+                                contentDescription = "check messages"
+                            )
+                        }
+                        IconButton(onClick = {
+                            // navigating to profile screen
+                            navController.navigate("profileScreen")
+                        }) {
+                            Icon(
+                                Icons.Filled.Person,
+                                contentDescription = "profile"
+                            )
+                        }
+                    }
+                }
+            )
         }
     ) {
         if (isProductsLoaded == false) {
@@ -135,17 +163,8 @@ fun productScreen(navController: NavController, viewModel:BuyerHomeScreenViewMod
                                     shape = RoundedCornerShape(20.dp),
                                     modifier = Modifier
                                         .clickable {
-                                            val imageurl = URLEncoder.encode(product.imageUrl)
-                                            val name = product.name
-                                            val price = product.price
-                                            val des = product.description
-                                            val id = product.id
-                                            val proId = product.categoryId
-                                            // navigate to specific product detail screen
-                                            Log.d("question", product.description)
-                                            navController.navigate(
-                                                "productDetailScreen/$name/$price/$des/$id/$proId"
-                                            )
+                                            // navigating to the upload product screen
+                                            navController.navigate("uploadProductScreen")
                                         }
                                         .size(200.dp),
                                     backgroundColor = colorResource(id = R.color.bottom_nav_color),

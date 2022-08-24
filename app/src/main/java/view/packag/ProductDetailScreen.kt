@@ -30,9 +30,14 @@ import view.packag.ReuableFunctions.commonButton
 
 @Composable
 fun productDetailScreen(navController: NavController,proName:String, proPrice:Int, proDes:String,
-            id:Int, proId:Int,viewModel: ProductDetailScreenViewModel, userToken:String) {
+            id:Int, proId:Int,viewModel: ProductDetailScreenViewModel) {
     // Function local variables
     val obj = LocalContext.current
+    // instance of session Manager
+    val sessionManager = SessionManager(obj)
+    // variable to hold the user token
+    var userToken:String by
+    remember{ mutableStateOf(sessionManager.fetchAuthToken().toString()) }
     var rating_value by remember { mutableStateOf("5") }
     var quantatityOfItems by remember { mutableStateOf(0) }
     var openDialog by remember { mutableStateOf(false) }
@@ -227,7 +232,7 @@ fun productDetailScreen(navController: NavController,proName:String, proPrice:In
                                                         openDialog = false
                                                         showProgress = false
                                                         //navigate to the cartlist screen
-                                                        navController.navigate("cartListScreen/$userToken")
+                                                        navController.navigate("cartListScreen")
                                                     } else {
                                                         openDialog = false
                                                     }

@@ -31,7 +31,9 @@ fun selectAccountScreen(navController: NavController) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize()
     ) {
         Image(
             painterResource(id = R.drawable.thumb),
@@ -54,7 +56,7 @@ fun selectAccountScreen(navController: NavController) {
             modifier = Modifier.fillMaxWidth()
         ) {
             // a column of card and radio button
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column() {
                 Card(
                     backgroundColor = Color.White,
                     shape = RoundedCornerShape(10.dp,),
@@ -89,6 +91,7 @@ fun selectAccountScreen(navController: NavController) {
                     }
                 }
                 RadioButton(selected = radioState,
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                     onClick = {
                         radioState = !radioState; radioState2 = false
                         if (radioState == true) {
@@ -146,11 +149,14 @@ fun selectAccountScreen(navController: NavController) {
                             selectedAccount = ""
                         }
                               },
-                    modifier = Modifier.padding(start = 36.dp)
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
                 )
             }
         }
         // Button to Navigate to sign in screen after selecting the account
+        Button(onClick = { navController.navigate("uploadProductScreen") }) {
+            Text(text = "upload")
+        }
         commonButton(onClick = {
             if (selectedAccount.isBlank()){
                 Toast.makeText(obj, "please select account", Toast.LENGTH_LONG).show()
@@ -162,14 +168,5 @@ fun selectAccountScreen(navController: NavController) {
                 radioState2 = false
             }
         }, text = "continue", navController = navController)
-
-        Button(onClick = {
-            navController.navigate("payScreen")
-            Toast.makeText(
-                obj.applicationContext,
-                "samson", Toast.LENGTH_LONG).show()
-        }) {
-            Text(text = "Test payScreen")
-        }
     }
 }

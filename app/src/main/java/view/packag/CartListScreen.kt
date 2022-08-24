@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -32,12 +33,19 @@ import model.ProductList
 import repository.Repository
 
 @Composable
-fun cartListScreen(navController: NavController, userToken:String, viewModel: CartListScreenViewModel) {
+fun cartListScreen(navController: NavController, viewModel: CartListScreenViewModel) {
     //Function variables
+    val obj = LocalContext.current
+    // instance of session Manager
+    val sessionManager = SessionManager(obj)
+    // variable to hold the user token
+    var userToken:String by
+    remember{ mutableStateOf(sessionManager.fetchAuthToken().toString()) }
+
     var openDialog by remember { mutableStateOf(false) }
-    var noItems by remember { mutableStateOf(0) }
     var totalPrice by remember { mutableStateOf(0) }
     var itemsInCartList:List<CartItemX> = remember { listOf() }
+    var noItems by remember { mutableStateOf(itemsInCartList.size) }
     // innitailizing the lifeCycle owner of this compose screen
     val lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current
     var isCartItemsLoaded by remember { mutableStateOf(false) }
@@ -78,7 +86,7 @@ fun cartListScreen(navController: NavController, userToken:String, viewModel: Ca
                             text = "Your Chart",
                             style = MaterialTheme.typography.h1
                         )
-                        Text(text = "N items")
+                        Text(text = "$noItems items")
                     }
                 }
                 Text(text = "All Items")
@@ -94,7 +102,7 @@ fun cartListScreen(navController: NavController, userToken:String, viewModel: Ca
                 Column(verticalArrangement = Arrangement.SpaceEvenly) {
                     Text(text = "Total:")
                     Text(
-                        text = "$ 300.50",
+                        text = "$ $totalPrice",
                         color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
@@ -190,7 +198,8 @@ fun cartListScreen(navController: NavController, userToken:String, viewModel: Ca
                             onClick = {
                                       // finish the contract backend process and
                                       // navigate to the success screen
-                                      navController.navigate("contractSignSuccessScreen")
+                                      navController.navigate(
+                                          "contractSignSuccessScreen/$noItems/$totalPrice")
                             },
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = colorResource(id = R.color.brand_Color),
@@ -210,7 +219,6 @@ fun cartListScreen(navController: NavController, userToken:String, viewModel: Ca
                 .padding(bottom = 50.dp)
         ) {
             for (i in itemsInCartList) {
-
                 Row(modifier = Modifier.padding(16.dp)) {
                     Card(elevation = 4.dp,
                     backgroundColor = colorResource(id = R.color.card_bgColor),

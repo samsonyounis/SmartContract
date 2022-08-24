@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import model.ProductList
 import view.packag.ReuableFunctions.arrowBackTopRow
+import view.packag.ReuableFunctions.bottomNavigation
 import java.net.URLEncoder
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -63,33 +64,10 @@ fun favoriteScreen(navController: NavController, viewModel:BuyerHomeScreenViewMo
                  arrowBackTopRow(text = "Favorites", navController = navController)
         },
     bottomBar = {
-        BottomNavigation(
-            backgroundColor = colorResource(id = R.color.bottom_nav_color),
-            elevation = 15.dp
-        ) {
-            BottomNavigationItem(selected = false, onClick = {
-                            // navigating to home screen
-            },
-                icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
-                selectedContentColor = colorResource(id = R.color.brand_Color)
-            )
-
-            BottomNavigationItem(selected = false, onClick = { /*TODO*/ },
-                icon = { Icon(Icons.Filled.Favorite, contentDescription = "Favorites") })
-
-            BottomNavigationItem(selected = false, onClick = { /*TODO*/ },
-                icon = { Icon(Icons.Filled.Message, contentDescription = "Messages") },
-                selectedContentColor = colorResource(id = R.color.brand_Color)
-            )
-
-            BottomNavigationItem(selected = false, onClick = {
-                // navigating to profile
-                navController.navigate("profileScreen")
-            },
-                icon = { Icon(Icons.Filled.Person, contentDescription = "profile") })
-
-        }
-    }) {
+        // implementing the bottom navigation here
+        bottomNavigation(navController = navController, currentScreen = "favoritesScreen")
+    }
+    ) {
         if (isFavoritesLoaded == false) {
             // showing the progress
             Column(
@@ -122,10 +100,12 @@ fun favoriteScreen(navController: NavController, viewModel:BuyerHomeScreenViewMo
                                                 error(R.drawable.errorloading_image)
                                             }),
                                         contentDescription = "Favorite",
-                                        Modifier.background(
-                                            color = colorResource(id = R.color.home_button_bgcolor),
-                                            shape = RoundedCornerShape(15.dp)
-                                        ).size(150.dp)
+                                        Modifier
+                                            .background(
+                                                color = colorResource(id = R.color.home_button_bgcolor),
+                                                shape = RoundedCornerShape(15.dp)
+                                            )
+                                            .size(150.dp)
                                     )
                                     Text(text = product.name,
                                     color = Color.Black)

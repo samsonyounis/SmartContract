@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.*
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
@@ -45,6 +46,11 @@ class MainActivity : ComponentActivity() {
     val buyerviewModel by lazy { ViewModelProvider(this, viewModelFactory).get(
             BuyerHomeScreenViewModel::class.java)
     }
+    // instance of seller screen view model
+    val sellerViewModelFactory by lazy { SellerHomeScreenViewModelFactory(repository) }
+    val sellerViewModel by lazy { ViewModelProvider(this, sellerViewModelFactory).get(
+        SellerHomeScreenViewModel::class.java)
+    }
     // instance of productDetailViewModel
     val prodDetailViewModelFactory by lazy { ProductDetailScreenViewModelFactory(repository) }
     // instance of buyer screen viewmodel
@@ -56,6 +62,12 @@ class MainActivity : ComponentActivity() {
     // instance of buyer screen viewmodel
     val cartListScreenviewModel by lazy { ViewModelProvider(this, cartListViewModelFactory).get(
         CartListScreenViewModel::class.java)
+    }
+    // instance of recentPostScreen ViewModel
+    val recentPostViewModelFactory by lazy { RecentPostScreenViewModelFactory(repository) }
+    // instance of buyer screen viewmodel
+    val recentPostViewModel by lazy { ViewModelProvider(this, recentPostViewModelFactory).get(
+        RecentPostScreenViewModel::class.java)
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,64 +120,44 @@ class MainActivity : ComponentActivity() {
                             signUpScreen(navController, signUpViewModel)
                         }
 
-                        composable("buyerHomeScreen/{userToken}",
-                        arguments = listOf(
-                            navArgument("userToken"){type = NavType.StringType}
-                        )) {
-                            val userToken = it.arguments?.getString("userToken")
-                            buyerHomeScreen(navController, buyerviewModel,
-                                userToken.toString())
+                        composable("buyerHomeScreen") {
+                            buyerHomeScreen(navController, buyerviewModel)
                         }
-                        composable("productsScreen/{userToken}",
-                        arguments = listOf(
-                            navArgument("userToken"){type = NavType.StringType}
-                        )) {
-                            val userToken = it.arguments?.getString("userToken")
-                            productScreen(navController, buyerviewModel,userToken.toString())
+                        composable("productsScreen") {
+                            productScreen(navController, buyerviewModel)
                         }
 
                         composable(
-                            "productDetailScreen/{proName}/{proPrice}/{proDes}/{id}/{proId}/{userToken}",
+                            "productDetailScreen/{proName}/{proPrice}/{proDes}/{id}/{proId}",
                             arguments = listOf(
                                 navArgument("proName"){ type = NavType.StringType },
                                 navArgument("proPrice"){type = NavType.IntType},
                                 navArgument("proDes"){type = NavType.StringType},
                                 navArgument("id"){type = NavType.IntType},
-                                navArgument("proId"){type = NavType.IntType},
-                                navArgument("userToken"){type = NavType.StringType}
+                                navArgument("proId"){type = NavType.IntType}
                             )){
                             val proName = it.arguments?.getString("proName")
                             val proPrice = it.arguments?.getInt("proPrice")
                             val proDes = it.arguments?.getString("proDes")
                             val id = it.arguments?.getInt("id")
                             val proId = it.arguments?.getInt("proId")
-                            val userToken = it.arguments?.getString("userToken")
-                            Log.d("answer", proDes.toString())
                             if (proPrice != null) {
                                 if (id != null) {
                                     if (proId != null) {
                                         productDetailScreen(navController,proName.toString(),
                                             proPrice.toInt(),proDes.toString(),id,proId,
-                                        proDetailviewModel,userToken.toString())
+                                        proDetailviewModel)
                                     }
                                 }
                             }
                         }
 
-                        composable("cartListScreen/{userToken}",
-                        arguments = listOf(
-                            navArgument("userToken"){type = NavType.StringType}
-                        )) {
-                            val userToken = it.arguments?.getString("userToken").toString()
-                            cartListScreen(navController,userToken,cartListScreenviewModel)
+                        composable("cartListScreen") {
+                            cartListScreen(navController, cartListScreenviewModel)
                         }
 
-                        composable("sellerHomeScreen/{userToken}",
-                        arguments = listOf(
-                            navArgument("userToken"){type = NavType.StringType}
-                        )) {
-                            val userToken = it.arguments?.getString("userToken")
-                            sellerHomeScreen(navController,userToken.toString())
+                        composable("sellerHomeScreen") {
+                            sellerHomeScreen(navController, sellerViewModel)
                         }
 
                         composable("profileScreen") {
@@ -176,8 +168,17 @@ class MainActivity : ComponentActivity() {
                             confirmPasswordScreen(navController)
                         }
 
-                        composable("contractSignSuccessScreen") {
-                            contractSignSuccess(navController)
+                        composable("contractSignSuccessScreen/{noItems}/{totalPrice}",
+                            arguments = listOf(
+                                navArgument("noItems"){type = NavType.IntType},
+                                navArgument("totalPrice"){type = NavType.IntType})) {
+                            val noItems = it.arguments?.getInt("noItems", 0)
+                            val totalPrice = it.arguments?.getInt("totalPrice",0)
+                            if (totalPrice != null) {
+                                if (noItems != null) {
+                                    contractSignSuccess(navController,noItems,totalPrice)
+                                }
+                            }
                         }
 
                         composable("signUpSccessScreen") {
@@ -194,8 +195,18 @@ class MainActivity : ComponentActivity() {
                             errorScreen(navController,error.toString())
                         }
 
-                        composable("payScreen") {
-                            payScreen(navController)
+                        composable("payScreen/{noItems}/{totalPrice}",
+                        arguments = listOf(
+                            navArgument("noItems"){type = NavType.IntType},
+                            navArgument("totalPrice"){type = NavType.IntType}
+                        )) {
+                            val noItems = it.arguments?.getInt("noItems",0)
+                            val totalPrice = it.arguments?.getInt("totalPrice",0)
+                            if (noItems != null) {
+                                if (totalPrice != null) {
+                                    payScreen(navController,noItems,totalPrice, cartListScreenviewModel)
+                                }
+                            }
                         }
 
                         composable("orderSuccessScreen") {
@@ -207,6 +218,18 @@ class MainActivity : ComponentActivity() {
 
                         composable("notificationScreen") {
                             notificationScreen(navController)
+                        }
+                        composable("productsByCategoryScreen") {
+                            productsByCategoryScreen(navController, sellerViewModel)
+                        }
+                        composable("uploadSuccessScreen"){
+                            uploadSuccessScreen(navController = navController)
+                        }
+                        composable("recentPostScreen"){
+                            recentPostScreen(navController = navController,recentPostViewModel)
+                        }
+                        composable("messageScreen"){
+                            messageScreen(navController = navController)
                         }
                     }
                 }

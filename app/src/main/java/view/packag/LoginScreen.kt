@@ -2,21 +2,14 @@ package view.packag
 
 import ViewModel.LoginScreenViewModel
 import android.util.Log
-import android.widget.Space
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Facebook
-import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,26 +20,23 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.*
 import androidx.navigation.NavController
-import androidx.navigation.navArgument
 import model.LoginRequest
-import model.LoginResponse
-import repository.Repository
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import view.packag.ReuableFunctions.arrowBackTopRow
+import view.packag.ReuableFunctions.circularProgress
 import view.packag.ReuableFunctions.commonButton
+import view.packag.ReuableFunctions.commonOutlinedTextField
 
 @Composable
 fun loginScreen(navController: NavController,accountType:String,viewModel:LoginScreenViewModel) {
     // lifeCycle owner
     val lifeCycleOwner:LifecycleOwner = LocalLifecycleOwner.current
     val obj = LocalContext.current // holds the current application context
+    val  sessionManager = SessionManager(obj) // instance of session Manager
     var emailIsError by remember { mutableStateOf(false) }
     var passwordIsError by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
@@ -56,6 +46,7 @@ fun loginScreen(navController: NavController,accountType:String,viewModel:LoginS
     var showProgress by remember { mutableStateOf(false) }
     var selectedAccount by remember { mutableStateOf(accountType) }
     var userToken by remember { mutableStateOf("") }
+
     DisposableEffect(lifeCycleOwner){
         val observer = LifecycleEventObserver{source, event ->
             if (event == Lifecycle.Event.ON_RESUME){
@@ -90,49 +81,22 @@ fun loginScreen(navController: NavController,accountType:String,viewModel:LoginS
                     "\n or Continue with social media"
         )
         Spacer(modifier = Modifier.height(30.dp))
-        OutlinedTextField(value = email, onValueChange = { email = it },
-            isError = emailIsError,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Next
-            ),
-            label = { Text("Email") },
-            placeholder = { Text(text = "Enter Your Email") },
-            keyboardActions = KeyboardActions(
-                onDone = { }
-            ),
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Email,
-                    contentDescription = "Email Address"
-                )
-            },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp)
+        commonOutlinedTextField(
+            valueText = email, onValueChange = {email = it}, isError = emailIsError,
+            labelText = "Email", placeholderText = "Enter your email",
+            trailingIcon = Icons.Filled.Email, iconDescription = "Email address" ,
+            keyboardType= KeyboardType.Email, imeAction = ImeAction.Next,
+            visualTransFormation = VisualTransformation.None
         )
         Spacer(modifier = Modifier.height(10.dp))
-        OutlinedTextField(value = password,
-            onValueChange = { password = it },
-            label = { Text("Password") },
-            isError = passwordIsError,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password,
-                imeAction = ImeAction.Next
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = { }
-            ),
-            trailingIcon = {
-                Icon(
-                    imageVector = Icons.Filled.Lock,
-                    contentDescription = "Email Address"
-                )
-            },
-            placeholder = { Text(text = "Enter Your password") },
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(20.dp),
-            visualTransformation = PasswordVisualTransformation()
+        commonOutlinedTextField(
+            valueText = password, onValueChange = {password = it}, isError = passwordIsError,
+            labelText = "password", placeholderText = "Enter your password",
+            trailingIcon = Icons.Filled.Lock, iconDescription = "password" ,
+            keyboardType= KeyboardType.Password, imeAction = ImeAction.Done,
+            visualTransFormation = PasswordVisualTransformation()
         )
+
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = errorMessage,
@@ -160,15 +124,9 @@ fun loginScreen(navController: NavController,accountType:String,viewModel:LoginS
         }
 
         Spacer(modifier = Modifier.height(50.dp))
-        if (showProgress == true){
-            CircularProgressIndicator(
-                color = Color.Green,
-                strokeWidth = ProgressIndicatorDefaults.StrokeWidth)
-        }
-        else{
-            showProgress==false
-        }
-        Spacer(modifier = Modifier.height(50.dp))
+        // circular progress indicator
+        circularProgress(showProgress = showProgress)
+        Spacer(modifier = Modifier.height(20.dp))
         commonButton(onClick = {
             if(email.isBlank()) {
                 emailIsError = true
@@ -181,21 +139,23 @@ fun loginScreen(navController: NavController,accountType:String,viewModel:LoginS
 
             else if (password.isBlank()){
                 passwordIsError = true
+                emailIsError = false
                 errorMessage = "password required"
             }
             else if (password.length < 6 ){
                 passwordIsError = true
+                emailIsError = false
                 errorMessage = "password too short"
             }
             else{
                 showProgress = true
+                //create loginRequest  object using the Email and password
+                val loginRequest = LoginRequest(email, password)
                 email = ""
                 password= ""
                 emailIsError = false
                 passwordIsError = false
                 errorMessage = ""
-                //create loginRequest  object using the Email and password
-                val loginRequest = LoginRequest(email, password)
                 // calling the login request from view model
                 viewModel.loginRequest(loginRequest)
                 // observing the login response from the view model
@@ -206,16 +166,16 @@ fun loginScreen(navController: NavController,accountType:String,viewModel:LoginS
                         // set a shared preerence storage to save the user
                         viewModel.token.observe(lifeCycleOwner) { token ->
                             userToken = token.toString()
+                            // saving the user token in the shared preference.
+                            sessionManager.saveAuthToken(userToken)
                         // Move the user to thier respective accounts
                         if (selectedAccount == "buyer") {
                             // navigating to buyer home screen
-                            Log.d("userToken", userToken)
                             navController.popBackStack()
-                            navController.navigate("buyerHomeScreen/$userToken")
+                            navController.navigate("buyerHomeScreen")
                         } else {
-                            Log.d("userToken", userToken)
                             navController.popBackStack()
-                            navController.navigate("sellerHomeScreen/$userToken")
+                            navController.navigate("sellerHomeScreen")
                         }
                     }
                     }
@@ -229,17 +189,16 @@ fun loginScreen(navController: NavController,accountType:String,viewModel:LoginS
                     }
                     else{
                         //toast the error code or error message
+                        Log.d("loginResponse", response)
                         Toast.makeText(obj.applicationContext, response, Toast.LENGTH_LONG).show()
                         // Move to the next screen and display the error code
                         navController.popBackStack()
                         navController.navigate("errorScreen/Error Code!!\n\n ${response}")
                     }
-
-                    Log.d("loginResponse", response)
                 }
             }
 
-        }, text = "continue", navController = navController)
+            }, text = "continue", navController = navController)
 
         Spacer(modifier = Modifier.height(20.dp))
         Row() {
