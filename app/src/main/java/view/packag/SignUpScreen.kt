@@ -5,9 +5,6 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -17,13 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.*
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
@@ -53,8 +47,7 @@ fun signUpScreen(navController: NavController, viewModel:SignUpScreenViewModel) 
     var openDialog by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
     var obj = LocalContext.current
-    // Creating instance of event lifecyle owner
-    val lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current
+    val lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current // Creating instance of event lifecyle owner
     DisposableEffect(lifeCycleOwner){
         val observer = LifecycleEventObserver{source, event ->
             if (event == Lifecycle.Event.ON_RESUME){
@@ -88,9 +81,7 @@ fun signUpScreen(navController: NavController, viewModel:SignUpScreenViewModel) 
                 onDismissRequest = {},
                 title = {
                         Text(text = "Creating User Account",
-                            color = Color.Black,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.h1)
                 },
                 text = {
                     // showing the circular progress indicator
@@ -276,7 +267,7 @@ fun signUpScreen(navController: NavController, viewModel:SignUpScreenViewModel) 
                                 Toast.makeText(obj.applicationContext, response, Toast.LENGTH_LONG).show()
                                 // Move to the next screen and display the error code
                                 navController.popBackStack()
-                                navController.navigate("errorScreen/Error Code!!\n\n ${response}")
+                                navController.navigate("errorScreen/Error!!\n\n ${response}")
                                 openDialog = false
                                 showProgress = false
                                 errorMessage = ""
@@ -285,19 +276,6 @@ fun signUpScreen(navController: NavController, viewModel:SignUpScreenViewModel) 
                     }
                 })
             }
-
-            item {
-                Row(modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center) {
-                    IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            Icons.Filled.Facebook,
-                            contentDescription = "sign up with FB"
-                        )
-                    }
-                }
-            }
-
             item {
                 Text(text = "By Continuing, you confirm that you agree with " +
                         "our terms and conditions")

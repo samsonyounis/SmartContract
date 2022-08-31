@@ -1,7 +1,6 @@
 package view.packag
 
 import ViewModel.LoginScreenViewModel
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -32,11 +31,12 @@ import view.packag.ReuableFunctions.commonButton
 import view.packag.ReuableFunctions.commonOutlinedTextField
 
 @Composable
-fun loginScreen(navController: NavController,accountType:String,viewModel:LoginScreenViewModel) {
+fun loginScreen(navController: NavController ,viewModel:LoginScreenViewModel) {
     // lifeCycle owner
     val lifeCycleOwner:LifecycleOwner = LocalLifecycleOwner.current
     val obj = LocalContext.current // holds the current application context
     val  sessionManager = SessionManager(obj) // instance of session Manager
+    var accountType by remember { mutableStateOf(sessionManager.getAccountType().toString()) }
     var emailIsError by remember { mutableStateOf(false) }
     var passwordIsError by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
@@ -44,8 +44,6 @@ fun loginScreen(navController: NavController,accountType:String,viewModel:LoginS
     var checkedState by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf("") }
     var showProgress by remember { mutableStateOf(false) }
-    var selectedAccount by remember { mutableStateOf(accountType) }
-    var userToken by remember { mutableStateOf("") }
 
     DisposableEffect(lifeCycleOwner){
         val observer = LifecycleEventObserver{source, event ->
@@ -60,15 +58,15 @@ fun loginScreen(navController: NavController,accountType:String,viewModel:LoginS
     }
     Column(modifier = Modifier
         .fillMaxSize()
-        .verticalScroll(rememberScrollState()),
+        .verticalScroll(rememberScrollState())
+        .padding(16.dp),
     horizontalAlignment = Alignment.CenterHorizontally) {
-        Spacer(modifier = Modifier.height(20.dp))
         // calling arrowBackTopRow function
         arrowBackTopRow(text = "Sign in", navController = navController)
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .padding(top = 40.dp, start = 16.dp, end = 16.dp)
+            .padding(top = 40.dp)
             .fillMaxSize()
     ) {
         Text(
@@ -165,18 +163,18 @@ fun loginScreen(navController: NavController,accountType:String,viewModel:LoginS
                         Toast.makeText(obj.applicationContext, response, Toast.LENGTH_LONG).show()
                         // set a shared preerence storage to save the user
                         viewModel.token.observe(lifeCycleOwner) { token ->
-                            userToken = token.toString()
                             // saving the user token in the shared preference.
-                            sessionManager.saveAuthToken(userToken)
-                        // Move the user to thier respective accounts
-                        if (selectedAccount == "buyer") {
-                            // navigating to buyer home screen
-                            navController.popBackStack()
-                            navController.navigate("buyerHomeScreen")
-                        } else {
-                            navController.popBackStack()
-                            navController.navigate("sellerHomeScreen")
-                        }
+                            sessionManager.saveAuthToken(token.toString())
+                            if(accountType == "seller"){
+                                // navigate to the seller home screen
+                                navController.popBackStack()
+                                navController.navigate("sellerHomeScreen")
+                            }
+                            else{
+                                // navigate to the buyer home screen
+                                navController.popBackStack()
+                                navController.navigate("buyerHomeScreen")
+                            }
                     }
                     }
                     else if (response == "user not found"){
@@ -188,12 +186,9 @@ fun loginScreen(navController: NavController,accountType:String,viewModel:LoginS
                         showProgress = false
                     }
                     else{
-                        //toast the error code or error message
-                        Log.d("loginResponse", response)
-                        Toast.makeText(obj.applicationContext, response, Toast.LENGTH_LONG).show()
                         // Move to the next screen and display the error code
                         navController.popBackStack()
-                        navController.navigate("errorScreen/Error Code!!\n\n ${response}")
+                        navController.navigate("errorScreen/Error !!\n\n ${response}")
                     }
                 }
             }
@@ -201,11 +196,6 @@ fun loginScreen(navController: NavController,accountType:String,viewModel:LoginS
             }, text = "continue", navController = navController)
 
         Spacer(modifier = Modifier.height(20.dp))
-        Row() {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(Icons.Filled.Facebook, contentDescription = "sign in with FB")
-            }
-        }
         Row() {
             Text(text = "Don't have an account?")
             Text(text = "Sign Up", Modifier.clickable {

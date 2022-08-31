@@ -10,7 +10,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.*
@@ -22,10 +21,6 @@ import view.packag.ReuableFunctions.*
 @Composable
 fun buyerHomeScreen(navController: NavController,viewModel:BuyerHomeScreenViewModel) {
     //Function Local Variables
-    val obj = LocalContext.current
-    // instance of session Manager
-    val  sessionManager = SessionManager(obj)
-    var userToken:String by remember { mutableStateOf(sessionManager.fetchAuthToken().toString()) }
     var query by remember { mutableStateOf("") }
     var userName by remember { mutableStateOf("User Name") }
 
@@ -89,7 +84,10 @@ fun buyerHomeScreen(navController: NavController,viewModel:BuyerHomeScreenViewMo
                     searchTextField(navController = navController, valueText = query,
                         onValueChange = {query = it}, onSerach = { })
                     //implementing the shopping cart button
-                    shoppingCartButton(onClick = {/*TODO*/})
+                    shoppingCartButton(onClick = {
+                        // navigating to products screen
+                        navController.navigate("productsScreen")
+                    })
                     
                     // notification badge button
                     notificationBadge(navController = navController, noNotifications = "4")
@@ -102,18 +100,17 @@ fun buyerHomeScreen(navController: NavController,viewModel:BuyerHomeScreenViewMo
         },
         bottomBar = {
             // implementing the bottom navigation here
-            bottomNavigation(navController = navController, "homeScreen")
+            bottomNavigation(navController = navController, "buyer")
         }
     ){
         Column(
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally) {
 
-            Row(horizontalArrangement = Arrangement.Start,
+            Row(horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.padding(start = 10.dp, end = 10.dp)
             ) {
                 Text(text = "Category")
-                Spacer(modifier = Modifier.weight(2f))
                 Text(text = "See All",
                     modifier = Modifier.clickable {  })
             }
@@ -149,7 +146,8 @@ fun buyerHomeScreen(navController: NavController,viewModel:BuyerHomeScreenViewMo
 
             // Popular product images goes here
             Text(text = "Popular Products",
-                style = MaterialTheme.typography.h1)
+                style = MaterialTheme.typography.h1,
+            modifier = Modifier.padding(start = 16.dp))
             if (isProductsLoaded == true) {
                 LazyRow(horizontalArrangement = Arrangement.SpaceBetween) {
                     for (item in productList) {

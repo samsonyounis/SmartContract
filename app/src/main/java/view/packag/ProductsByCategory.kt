@@ -1,50 +1,32 @@
 package view.packag
 
-import ViewModel.BuyerHomeScreenViewModel
 import ViewModel.SellerHomeScreenViewModel
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import model.ProductList
-import view.packag.ReuableFunctions.notificationBadge
-import view.packag.ReuableFunctions.searchTextField
-import view.packag.ReuableFunctions.shoppingCartButton
-import view.packag.ReuableFunctions.userNameCard
-import java.net.URLEncoder
+import view.packag.ReuableFunctions.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun productsByCategoryScreen(navController: NavController, viewModel: SellerHomeScreenViewModel) {
     //Function Local Variables
     val obj = LocalContext.current
-    val sessionManager = SessionManager(obj)  // instance of session Manager
-    // variable to hold the user token
-    var userToken:String by
-    remember{ mutableStateOf(sessionManager.fetchAuthToken().toString()) }
     var query by remember { mutableStateOf("") }
     // variable to hold the user name of the user
     var userName by remember { mutableStateOf("samson osman") }
@@ -53,7 +35,6 @@ fun productsByCategoryScreen(navController: NavController, viewModel: SellerHome
     // variable to hold list of specific products type
     var productList: List<ProductList> = remember { listOf() }
     var isProductsLoaded by remember { mutableStateOf(false) }
-
     // calling the getproductsList function defined in the view model
     viewModel.getProductList()
     // Observing the list of products from the view model
@@ -62,8 +43,6 @@ fun productsByCategoryScreen(navController: NavController, viewModel: SellerHome
             productList = res
             isProductsLoaded = true
         } else {
-            // logging the result in log cat
-            Log.d("****", "onFailure: ")
             productList = listOf()
             isProductsLoaded = false
         }
@@ -99,41 +78,8 @@ fun productsByCategoryScreen(navController: NavController, viewModel: SellerHome
             }
         },
         bottomBar = {
-            BottomAppBar(
-                backgroundColor =
-                colorResource(id = R.color.bottom_nav_color),
-                content = {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        IconButton(onClick = { /* doSomething() */ }) {
-                            Icon(Icons.Filled.Home, contentDescription = "go to home")
-                        }
-                        IconButton(onClick = { /* doSomething() */ }) {
-                            Icon(
-                                Icons.Filled.Favorite,
-                                contentDescription = "go to favorites"
-                            )
-                        }
-                        IconButton(onClick = { /* doSomething() */ }) {
-                            Icon(
-                                Icons.Filled.Message,
-                                contentDescription = "check messages"
-                            )
-                        }
-                        IconButton(onClick = {
-                            // navigating to profile screen
-                            navController.navigate("profileScreen")
-                        }) {
-                            Icon(
-                                Icons.Filled.Person,
-                                contentDescription = "profile"
-                            )
-                        }
-                    }
-                }
-            )
+            //implementing the bottom navigation here
+            bottomNavigation(navController = navController, currentScreen = "productsByCategoryScreen")
         }
     ) {
         if (isProductsLoaded == false) {

@@ -1,12 +1,10 @@
 package view.packag
 
 import ViewModel.BuyerHomeScreenViewModel
-import ViewModel.ProductsActivityViewModel
 import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
@@ -15,9 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Message
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +27,6 @@ import coil.compose.rememberImagePainter
 import model.ProductList
 import view.packag.ReuableFunctions.arrowBackTopRow
 import view.packag.ReuableFunctions.bottomNavigation
-import java.net.URLEncoder
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

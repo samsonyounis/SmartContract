@@ -1,8 +1,6 @@
 package view.packag
 
 import ViewModel.ProductDetailScreenViewModel
-import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,25 +17,21 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import model.AddToCartRequest
-import view.packag.ReuableFunctions.commonButton
+import view.packag.ReuableFunctions.circularProgress
 
 @Composable
 fun productDetailScreen(navController: NavController,proName:String, proPrice:Int, proDes:String,
             id:Int, proId:Int,viewModel: ProductDetailScreenViewModel) {
     // Function local variables
-    val obj = LocalContext.current
-    // instance of session Manager
-    val sessionManager = SessionManager(obj)
-    // variable to hold the user token
-    var userToken:String by
-    remember{ mutableStateOf(sessionManager.fetchAuthToken().toString()) }
+    val obj = LocalContext.current  // instance of session Manager
+    val sessionManager = SessionManager(obj)  // variable to hold the user token
+    var userToken:String by remember{ mutableStateOf(sessionManager.fetchAuthToken().toString()) }
     var rating_value by remember { mutableStateOf("5") }
     var quantatityOfItems by remember { mutableStateOf(0) }
     var openDialog by remember { mutableStateOf(false) }
@@ -51,10 +45,7 @@ fun productDetailScreen(navController: NavController,proName:String, proPrice:In
                 .padding(16.dp),
                 horizontalArrangement = Arrangement.Start) {
                 // back button
-                Button(onClick = {
-                                 // navigating back stack
-                                 navController.navigateUp()
-                },
+                Button(onClick = {navController.navigateUp() /*navigating back stack */},
                     shape = CircleShape,
                     modifier = Modifier.size(50.dp),
                     colors = ButtonDefaults.buttonColors(
@@ -87,19 +78,10 @@ fun productDetailScreen(navController: NavController,proName:String, proPrice:In
                 onDismissRequest = {},
                 title = {
                     Text(text = "Adding item to cart",
-                        color = Color.Black,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.h1)
                 },
-                text = {
-                    if (showProgress == true){
-                        CircularProgressIndicator(
-                            color = colorResource(id = R.color.brand_Color),
-                            strokeWidth = ProgressIndicatorDefaults.StrokeWidth)
-                    }
-                    else{
-                        showProgress==false
-                    }
+                text = { // showing circular progress here
+                       circularProgress(showProgress = showProgress)
                 },
                 buttons = { }
             )
@@ -107,7 +89,7 @@ fun productDetailScreen(navController: NavController,proName:String, proPrice:In
         Column(horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxSize()) {
-            //putt the image of the product here
+            //put the image of the product here
             Image(
                 painter = rememberImagePainter(data = "imageUrl no image",
                     builder = {
@@ -159,8 +141,7 @@ fun productDetailScreen(navController: NavController,proName:String, proPrice:In
                     Text(text = proDes,
                         modifier = Modifier.padding(16.dp))
 
-                    Card(backgroundColor = colorResource(id =
-                    R.color.profile_button_colors),
+                    Card(backgroundColor = colorResource(id = R.color.profile_button_colors),
                         elevation = 5.dp,
                         shape = RoundedCornerShape(15.dp),
                         modifier = Modifier.fillMaxSize()) {
@@ -186,7 +167,9 @@ fun productDetailScreen(navController: NavController,proName:String, proPrice:In
                                 }
                                 Text(text = quantatityOfItems.toString(),
                                     color = Color.Black,
-                                modifier = Modifier.align(Alignment.CenterVertically).padding(end = 8.dp, start = 8.dp))
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .padding(end = 8.dp, start = 8.dp))
                                 Button(onClick = {
                                     // increase the number of cart items
                                         quantatityOfItems++
@@ -225,7 +208,6 @@ fun productDetailScreen(navController: NavController,proName:String, proPrice:In
                                                 showProgress = true
                                                 val item =
                                                     AddToCartRequest(id, proId, quantatityOfItems)
-                                                Log.d("userToken", userToken)
                                                 viewModel.addToCart(userToken, item)
                                                 viewModel.isAddToCartSuccess.observe(lifeCycleOwner) { response ->
                                                     if (response == true) {

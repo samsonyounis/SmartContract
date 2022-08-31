@@ -1,18 +1,19 @@
 package view.packag
 
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import view.packag.ReuableFunctions.arrowBackTopRow
 import view.packag.ReuableFunctions.bottomNavigation
+import view.packag.ReuableFunctions.profileButton
 
 @Composable
 fun profileScreen(navController: NavController) {
@@ -30,102 +31,29 @@ fun profileScreen(navController: NavController) {
         Column(horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier
-                .padding(10.dp)
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
                 .fillMaxSize()) {
 
-            Button(onClick = { },
-                shape = RoundedCornerShape(15.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = colorResource(id = R.color.profile_button_colors)
-                ),
-                modifier = Modifier
-                    .width(300.dp)
-                    .height(60.dp)) {
-                Icon(
-                    imageVector = Icons.Filled.Person,
-                    contentDescription = "go to Profile"
-                )
-                Text(text = "My Account")
-                Icon(
-                    imageVector = Icons.Filled.ArrowForward,
-                    contentDescription = "go to your Account"
-                )
+            profileButton(icon = Icons.Filled.Person, iconDescription = "profile", text ="My Account"){
+
+            }
+            // notifications button
+            profileButton(icon = Icons.Filled.Notifications, iconDescription = "Notifications",
+                text ="Notifications"){
             }
 
-            Button(onClick = { },
-                shape = RoundedCornerShape(15.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = colorResource(id = R.color.profile_button_colors)
-                ),
-                modifier = Modifier
-                    .width(300.dp)
-                    .height(60.dp)) {
-                Icon(
-                    imageVector = Icons.Filled.Notifications,
-                    contentDescription = "go to Notifications"
-                )
-                Text(text = "Notifications")
-                Icon(
-                    imageVector = Icons.Filled.ArrowForward,
-                    contentDescription = "go to your Notifications"
-                )
+            // settings button
+            profileButton(icon = Icons.Filled.Settings, iconDescription = "app settings",
+                text ="Settings"){
             }
-
-            Button(onClick = { },
-                shape = RoundedCornerShape(15.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = colorResource(id = R.color.profile_button_colors)
-                ),
-                modifier = Modifier
-                    .width(300.dp)
-                    .height(60.dp)) {
-                Icon(
-                    imageVector = Icons.Filled.Settings,
-                    contentDescription = "go to App Settings"
-                )
-                Text(text = "Settings")
-                Icon(
-                    imageVector = Icons.Filled.ArrowForward,
-                    contentDescription = "go to your settings"
-                )
+            // help button
+            profileButton(icon = Icons.Filled.Help, iconDescription = "Help center",
+                text ="Help"){
             }
-
-            Button(onClick = { },
-                shape = RoundedCornerShape(15.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = colorResource(id = R.color.profile_button_colors)
-                ),
-                modifier = Modifier
-                    .width(300.dp)
-                    .height(60.dp)) {
-                Icon(
-                    imageVector = Icons.Filled.Help,
-                    contentDescription = "go to Help center"
-                )
-                Text(text = "Help")
-                Icon(
-                    imageVector = Icons.Filled.ArrowForward,
-                    contentDescription = "help"
-                )
-            }
-
-            Button(onClick = { },
-                shape = RoundedCornerShape(15.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = colorResource(id = R.color.profile_button_colors)
-                ),
-                modifier = Modifier
-                    .width(300.dp)
-                    .height(60.dp)) {
-                Icon(
-                    imageVector = Icons.Filled.Logout,
-                    contentDescription = "Logout"
-                )
-                Text(text = "Logout")
-                Icon(
-                    imageVector = Icons.Filled.ArrowForward,
-                    contentDescription = "Account Logout"
-                )
+            // notifications button
+            profileButton(icon = Icons.Filled.Logout, iconDescription = "logout",
+                text ="Logout"){
             }
         }
     }

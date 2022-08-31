@@ -1,7 +1,6 @@
 package view.packag
 
 import android.graphics.Bitmap
-import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.launch
@@ -18,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,12 +28,7 @@ import view.packag.ReuableFunctions.arrowBackTopRow
 
 @Composable
 fun uploadProductscreen(navController: NavController) {
-    val obj = LocalContext.current
-    // instance of session Manager
-    val sessionManager = SessionManager(obj)
-    // variable to hold the user token
-    var userToken:String by
-    remember{ mutableStateOf(sessionManager.fetchAuthToken().toString()) }
+    // function local variables.
     var proName by remember { mutableStateOf("") }
     var proID by remember { mutableStateOf("") }
     var proDescription by remember { mutableStateOf("") }
@@ -49,6 +42,7 @@ fun uploadProductscreen(navController: NavController) {
             Column(verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(16.dp)) {
+                // top backward arrow.
                 arrowBackTopRow(text = "sport", navController = navController)
 
             }
@@ -57,18 +51,16 @@ fun uploadProductscreen(navController: NavController) {
     {
         Column(horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize()
+                .padding(16.dp).fillMaxSize()
                 .verticalScroll(rememberScrollState())) {
 
-            Text(text = "Upload Product",
-                style = MaterialTheme.typography.h1)
+            Text(text = "Upload Product", style = MaterialTheme.typography.h1)
             Spacer(modifier = Modifier.height(10.dp))
             Text(text = "Take picture of the product and provide more details of the" +
                     "product such as the price e.t.c")
 
             Spacer(modifier = Modifier.height(16.dp))
-// a row of two texts here
+             // a row of two texts here
             Row() {
                 Text(text = "Take Photo",
                     modifier = Modifier.clickable {  },
@@ -83,8 +75,8 @@ fun uploadProductscreen(navController: NavController) {
                     },
                     textDecoration = TextDecoration.Underline)
             }
-
             Spacer(modifier = Modifier.height(8.dp))
+
             Column(horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(16.dp)
@@ -95,7 +87,6 @@ fun uploadProductscreen(navController: NavController) {
                 // launch camera app and open take the picture
                 // variable to hold the returned picture
                 val result = remember { mutableStateOf<Bitmap?>(null) }
-                val imageData = remember { mutableStateOf(null) }
                 val launcher = rememberLauncherForActivityResult(ActivityResultContracts.
                 TakePicturePreview()) {
                     result.value = it
@@ -109,14 +100,9 @@ fun uploadProductscreen(navController: NavController) {
                         )
                     }
                     // camera icon here
-                    IconButton(onClick = { /*TODO*/ },
-                        modifier = Modifier
-                            .size(100.dp)
-                            .padding(16.dp)) {
                         Icon(imageVector = Icons.Filled.AddAPhoto,
                             contentDescription = "Camera",
                             Modifier.size(100.dp))
-                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(onClick = {
@@ -132,7 +118,6 @@ fun uploadProductscreen(navController: NavController) {
                             .height(70.dp)
                             .padding(16.dp)) {
                         Text(text = "Take photo")
-
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                     // button to select image from gallery
@@ -148,23 +133,20 @@ fun uploadProductscreen(navController: NavController) {
                             .height(70.dp)
                             .padding(16.dp)) {
                         Text(text = "Gallery")
-
                     }
                 }
                 else{
-                        result.value?.let { image ->
+                    result.value?.let { image ->
                             Image(
                                 image.asImageBitmap(),
                                 null, modifier = Modifier
-                                    .size(300.dp)
-                                    .padding(16.dp)
+                                    .size(300.dp).padding(16.dp)
                             )
                         }
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
             if (getproductDetails == true){
-
                     productDetailsTextFields(
                         valueText = proName, onValueChane = { proName = it },
                         label = "product name",

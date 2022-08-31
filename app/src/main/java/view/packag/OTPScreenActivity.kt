@@ -1,30 +1,20 @@
 package view.packag
 
-import ViewModel.LoginScreenViewModel
-import ViewModel.LoginScreenViewModelFactory
 import ViewModel.OtpScreenViewModel
 import ViewModel.OtpScreenViewModelFactory
 import android.app.Activity
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
-import androidx.compose.material.Button
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.chaos.view.PinView
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import repository.Repository
-import java.util.jar.Manifest
 import java.util.regex.Pattern
 
 class OTPScreenActivity : AppCompatActivity() {

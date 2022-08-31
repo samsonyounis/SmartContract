@@ -1,55 +1,33 @@
 package view.packag
 
 import ViewModel.BuyerHomeScreenViewModel
-import ViewModel.BuyerHomeScreenViewModelFactory
-import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.GridCells
 import androidx.compose.foundation.lazy.LazyVerticalGrid
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import model.ProductList
-import repository.Repository
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import view.packag.ReuableFunctions.*
 import java.net.URLEncoder
-
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun productScreen(navController: NavController, viewModel:BuyerHomeScreenViewModel) {
     //Function Local Variables
     val obj = LocalContext.current
-    // instance of session Manager
-    val sessionManager = SessionManager(obj)
-    // variable to hold the user token
-    var userToken:String by
-    remember{ mutableStateOf(sessionManager.fetchAuthToken().toString()) }
     var query by remember { mutableStateOf("") }
     // variable to hold the user name of the user
     var userName by remember { mutableStateOf("samson osman") }
@@ -67,8 +45,6 @@ fun productScreen(navController: NavController, viewModel:BuyerHomeScreenViewMod
             productList = res
             isProductsLoaded = true
         } else {
-            // logging the result in log cat
-            Log.d("****", "onFailure: ")
             productList = listOf()
             isProductsLoaded = false
         }
@@ -142,7 +118,6 @@ fun productScreen(navController: NavController, viewModel:BuyerHomeScreenViewMod
                                             val id = product.id
                                             val proId = product.categoryId
                                             // navigate to specific product detail screen
-                                            Log.d("question", product.description)
                                             navController.navigate(
                                                 "productDetailScreen/$name/$price/$des/$id/$proId"
                                             )

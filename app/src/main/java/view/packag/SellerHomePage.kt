@@ -1,32 +1,19 @@
 package view.packag
 
 import ViewModel.SellerHomeScreenViewModel
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.observe
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
 import model.CategoryList
 import model.ProductList
 import view.packag.ReuableFunctions.*
@@ -34,15 +21,10 @@ import view.packag.ReuableFunctions.*
 @Composable
 fun sellerHomeScreen(navController: NavController, viewModel: SellerHomeScreenViewModel){
 //Function Local Variables
-    val obj = LocalContext.current
-    // instance of session Manager
-    val  sessionManager = SessionManager(obj)
-    var userToken:String by remember { mutableStateOf(sessionManager.fetchAuthToken().toString()) }
     var query by remember { mutableStateOf("") }
     var userName by remember { mutableStateOf("samson osman") }
     // instance of life cycle owner.
     val lifeCycleOwner: LifecycleOwner = LocalLifecycleOwner.current
-
     // variables to hold list of products and product categories.
     var categoryList:List<CategoryList> = remember{listOf()}
     var productList:List<ProductList> = remember { listOf()}
@@ -52,7 +34,6 @@ fun sellerHomeScreen(navController: NavController, viewModel: SellerHomeScreenVi
     // calling the getproductsList and the getCategoryList functions defined in the view model
     viewModel.getProductList()
     viewModel.getCategoryList()
-
     // observing the the list of Categories variable from the view model
     viewModel.allCategories.observe(lifeCycleOwner) { catResponse ->
         if (catResponse != null) {
@@ -69,8 +50,6 @@ fun sellerHomeScreen(navController: NavController, viewModel: SellerHomeScreenVi
             productList = res
             isProductsLoaded = true
         } else {
-            // logging the result in log cat
-            Log.d("****", "onFailure: ")
             productList = listOf()
             isProductsLoaded = false
         }
@@ -108,7 +87,7 @@ fun sellerHomeScreen(navController: NavController, viewModel: SellerHomeScreenVi
         },
         bottomBar = {
             // implementing the bottom navigation here.
-            bottomNavigation(navController = navController, "homeScreen")
+            bottomNavigation(navController = navController, "seller")
         }
     ){
         Column(
@@ -123,7 +102,6 @@ fun sellerHomeScreen(navController: NavController, viewModel: SellerHomeScreenVi
                 Text(text = "See All",
                     modifier = Modifier.clickable {  })
             }
-
 
             if (isCategoryLoaded == true) {
                 LazyRow {

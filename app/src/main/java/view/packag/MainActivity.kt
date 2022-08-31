@@ -8,7 +8,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -16,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import repository.Repository
 import view.packag.ui.theme.SmartContractTheme
 import view.packag.ui.theme.orderSuccessScreen
@@ -74,6 +77,15 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             SmartContractTheme() {
+                // instance of systemUiController
+                val systemUiController = rememberSystemUiController()
+                SideEffect {
+                    // setting the status bar colors.
+                    systemUiController.setStatusBarColor(
+                        color = Color.White,
+                        darkIcons = true
+                    )
+                }
                 Surface(color = MaterialTheme.colors.background) {
                     // initializing the navController
                     navController = rememberNavController()
@@ -94,13 +106,8 @@ class MainActivity : ComponentActivity() {
                         composable("animateSplashScreen_Screen") {
                             animateSplashScreen(navController)
                         }
-                        composable("loginScreen/{accountType}",
-                            arguments = listOf(
-                                navArgument("accountType") {
-                                    type = NavType.StringType })
-                        ){
-                            val a = it.arguments?.getString("accountType")
-                            loginScreen(navController = navController,a.toString(),loginViewModel)
+                        composable("loginScreen"){
+                            loginScreen(navController = navController,loginViewModel)
                         }
 
                         composable("successfulLoginScreen") {

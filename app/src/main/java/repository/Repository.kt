@@ -1,10 +1,8 @@
 package repository
 
 import Api.RetrofitObjInstance
-import android.provider.ContactsContract
 import model.*
 import retrofit2.Call
-import retrofit2.Response
 
 class Repository {
      fun addUserAccount(user:User): Call<SignUpResponse> {

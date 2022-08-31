@@ -23,7 +23,8 @@ import view.packag.ReuableFunctions.commonButton
 @Composable
 fun selectAccountScreen(navController: NavController) {
     //Function Local Variables
-    val obj = LocalContext.current
+    val obj = LocalContext.current // holds the current application context
+    val  sessionManager = SessionManager(obj) // instance of session Manager
     var radioState by remember { mutableStateOf(false) }
     var radioState2 by remember { mutableStateOf(false) }
     var selectedAccount by remember { mutableStateOf("") }
@@ -82,7 +83,7 @@ fun selectAccountScreen(navController: NavController) {
                             contentDescription = "Buyer Account",
                             modifier = Modifier
                                 .height(150.dp)
-                                .width(140.dp)
+                                .width(120.dp)
                         )
                         Text(
                             text = "Buyer",
@@ -130,7 +131,7 @@ fun selectAccountScreen(navController: NavController) {
                             contentDescription = "Seller Account",
                             modifier = Modifier
                                 .height(150.dp)
-                                .width(140.dp)
+                                .width(120.dp)
                         )
                         Text(
                             text = "seller",
@@ -154,15 +155,14 @@ fun selectAccountScreen(navController: NavController) {
             }
         }
         // Button to Navigate to sign in screen after selecting the account
-        Button(onClick = { navController.navigate("uploadProductScreen") }) {
-            Text(text = "upload")
-        }
         commonButton(onClick = {
             if (selectedAccount.isBlank()){
                 Toast.makeText(obj, "please select account", Toast.LENGTH_LONG).show()
             }
             else {
-                navController.navigate("loginScreen/"+ selectedAccount)
+                // saving the selected account in the shared prefernces
+                sessionManager.saveAccountType(selectedAccount)
+                navController.navigate("loginScreen")
                 selectedAccount = ""
                 radioState = false
                 radioState2 = false

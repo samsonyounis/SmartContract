@@ -1,8 +1,6 @@
 package view.packag
 
 import ViewModel.CartListScreenViewModel
-import ViewModel.CartListScreenViewModelFactory
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -18,29 +16,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import model.CartItem
 import model.CartItemX
-import model.ProductList
-import repository.Repository
 
 @Composable
 fun cartListScreen(navController: NavController, viewModel: CartListScreenViewModel) {
     //Function variables
     val obj = LocalContext.current
-    // instance of session Manager
-    val sessionManager = SessionManager(obj)
+    val sessionManager = SessionManager(obj) // instance of session Manager
     // variable to hold the user token
-    var userToken:String by
-    remember{ mutableStateOf(sessionManager.fetchAuthToken().toString()) }
+    var userToken:String by remember{ mutableStateOf(sessionManager.fetchAuthToken().toString()) }
 
     var openDialog by remember { mutableStateOf(false) }
     var totalPrice by remember { mutableStateOf(0) }
@@ -57,8 +48,6 @@ fun cartListScreen(navController: NavController, viewModel: CartListScreenViewMo
             itemsInCartList = response
             isCartItemsLoaded = true
         } else {
-            // logging the result in log cat
-            Log.d("****", "onFailure: ")
             itemsInCartList = listOf()
             isCartItemsLoaded = false
         }
@@ -151,16 +140,13 @@ fun cartListScreen(navController: NavController, viewModel: CartListScreenViewMo
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Text(
                             text = "Sign contract with",
-                            color = Color.Black,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            style = MaterialTheme.typography.h1
                         )
 
                         Text(
                             text = "Service provider",
                             color = colorResource(id = R.color.brand_Color),
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
+                            fontSize = 18.sp, fontWeight = FontWeight.Bold
                         )
                     }
                     Spacer(modifier = Modifier.width(10.dp))

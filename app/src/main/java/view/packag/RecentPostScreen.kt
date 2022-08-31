@@ -1,7 +1,6 @@
 package view.packag
 
 import ViewModel.RecentPostScreenViewModel
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -20,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
-import model.CartItemX
 import model.ProductList
 import view.packag.ReuableFunctions.bottomNavigation
 

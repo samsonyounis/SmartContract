@@ -2,11 +2,7 @@ package view.packag
 
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.widget.EditText
-import view.packag.SmsBroadCastReciever
 import android.content.Intent
-import android.provider.Telephony
-import com.chaos.view.PinView
 import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
